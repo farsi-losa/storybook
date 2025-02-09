@@ -21,18 +21,19 @@ const search_icon = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox=
 
 export interface DropdownSearchProps {
   options: string[];
-  outline: boolean;
-  multiple: boolean;
+  outline?: boolean;
+  multiple?: boolean;
+  useSearch?: boolean;
   onReturnValue: (value: string[] | string) => void;
 }
 
 /** Primary UI component for user interaction */
-export const DropdownSearch: React.FC<DropdownSearchProps> = ({ options, outline, multiple, onReturnValue }) => {
+export const DropdownSearch: React.FC<DropdownSearchProps> = ({ options, outline = true, multiple = true, useSearch = true, onReturnValue }) => {
   const [searchActive, setSearchActive] = useState<boolean>(false);
   const [selectedOpt, setselectedOpt] = useState<string[]>([]);
   const [searchKey, setSearchKey] = useState<string>('');
   const [selectedSingleOpt, setSelectedSingleOpt] = useState<string>('');
-  const [option_list, setOptions] = useState<string[]>(options)
+  const [optionList, setOptions] = useState<string[]>(options);
 
   const onClickDropdown = () => {
     setSearchActive(true);
@@ -55,20 +56,21 @@ export const DropdownSearch: React.FC<DropdownSearchProps> = ({ options, outline
   const ref = useOutsideClick(() => {
     setSearchActive(false);
     setSearchKey('');
+    setOptions(options);
   });
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKey(event.target.value);
     const filteredOptions = options.filter((item) =>
-        item.toLowerCase().includes(event.target.value.toLowerCase())
-      );
-      setOptions(filteredOptions);
-}
+      item.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setOptions(filteredOptions);
+  }
 
   const clearSearch = () => {
     setSearchKey('');
     setOptions(options);
-}
+  }
 
   const removeSelectedOption = (value: string) => {
 
@@ -97,24 +99,29 @@ export const DropdownSearch: React.FC<DropdownSearchProps> = ({ options, outline
   };
 
   return (
-    <div className="relative items-center justify-items-center h-[300px] p-[30px]" ref={ref}>
-      <div className={`${outline ? "outline outline-[1] outline-gray-300" : 'bg-gray-100'} rounded-md w-full h-auto cursor-pointer pt-2 px-1 min-h-[45px]`} onClick={onClickDropdown}>
-        {multiple
-          ? selectedOpt.map(item => <span key={item} className={`rounded-full px-3 py-1 text-sm mx-1 mb-2 inline-block  ${outline ? 'bg-gray-100' : 'bg-white outline outline-[1] outline-gray-300 '}`}>{item} <span onClick={() => removeSelectedOption(item)}>{remove_button_outline}</span></span>)
-          : selectedSingleOpt === "" || <span className={`rounded-full px-3 py-1 text-sm mx-1 mb-2 inline-block  ${outline ? 'bg-gray-100' : 'bg-white outline outline-[1] outline-gray-300 '}`}>{selectedSingleOpt} </span>}
-        {arrow_icon}
-      </div>
-      <div className={`left-[30px] right-[30px] rounded-md outline outline-[1] outline-gray-300 absolute bg-white ${searchActive ? '' : "hidden"}`}>
-        <div className="border-b flex p-2">
-          <div>{search_icon}</div> <input value={searchKey} onChange={onSearchInputChange} className="flex-1 focus:outline-0 px-2" />
-          {searchKey.length === 0 || <div className="cursor-pointer" onClick={clearSearch}>{remove_button_fill}</div>}
+    <div className='h-[300px]'>
+      <div className="relative items-center justify-items-center p-[30px]" ref={ref}>
+        <div className={`${outline ? "outline outline-[1] outline-gray-300" : 'bg-gray-100'} rounded-md w-full h-auto cursor-pointer pt-2 px-1 min-h-[45px]`} onClick={onClickDropdown}>
+          {multiple
+            ? selectedOpt.map(item => <span key={item} className={`rounded-full px-3 py-1 text-sm mx-1 mb-2 inline-block  ${outline ? 'bg-gray-100' : 'bg-white outline outline-[1] outline-gray-300 '}`}>{item} <span onClick={() => removeSelectedOption(item)}>{remove_button_outline}</span></span>)
+            : selectedSingleOpt === "" || <span className={`rounded-full px-3 py-1 text-sm mx-1 mb-2 inline-block  ${outline ? 'bg-gray-100' : 'bg-white outline outline-[1] outline-gray-300 '}`}>{selectedSingleOpt} </span>}
+          {arrow_icon}
         </div>
-        <div className="text-sm">
-          {searchKey.length > 0 && option_list.length === 0
-            ? <div className='py-1 px-2'>option not available</div>
-            : option_list.map(item =>
-              <div key={item} className="py-1 px-2 cursor-pointer hover:bg-teal-50 " onClick={() => multiple ? onClickOption(item) : onClickSingleOption(item)}>{highlightMatch(item, searchKey)}</div>
-            )}
+        <div className={`left-[30px] right-[30px] rounded-md outline outline-[1] outline-gray-300 absolute bg-white ${searchActive ? '' : "hidden"}`}>
+          {useSearch ?
+            <div className="border-b flex p-2">
+              <div>{search_icon}</div> <input value={searchKey} onChange={onSearchInputChange} className="flex-1 focus:outline-0 px-2" />
+              {searchKey.length === 0 || <div className="cursor-pointer" onClick={clearSearch}>{remove_button_fill}</div>}
+            </div>
+            : null}
+          <div className="text-sm">
+            {searchKey.length > 0 && optionList.length === 0
+                        ? <div className='py-1 px-2'>option not available</div>
+                        : (useSearch ? optionList : options).map(item => 
+                        <div key={item} className="py-1 px-2 cursor-pointer hover:bg-teal-50 " onClick={() => multiple ? onClickOption(item) : onClickSingleOption(item)}>{highlightMatch(item,searchKey)}</div>)
+                        
+                    }
+          </div>
         </div>
       </div>
     </div>

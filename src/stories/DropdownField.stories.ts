@@ -15,17 +15,14 @@ const meta = {
   tags: ['autodocs'],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    // backgroundColor: { control: 'color' },
-    // options: [],
-    // outline: true,
-    // multiple: false,
     onReturnValue: fn()
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
     options: ['option one', 'option two', 'option three', 'option four', 'option five'],
-    outline: false,
-    multiple: true
+    outline: true,
+    multiple: true,
+    useSearch: true
   },
 } satisfies Meta<typeof DropdownSearch>;
 
@@ -36,8 +33,9 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     options: ['option one', 'option two', 'option three', 'option four', 'option five'],
-    outline: false,
+    outline: true,
     multiple: true,
+    useSearch: true,
     onReturnValue: (value: string[] | string) => {
       // setValueFromChild(value);
       console.log('handleValueFromChild',value)
