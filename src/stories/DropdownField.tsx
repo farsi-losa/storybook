@@ -32,7 +32,7 @@ export const DropdownSearch: React.FC<DropdownSearchProps> = ({ options, outline
   const [selectedOpt, setselectedOpt] = useState<string[]>([]);
   const [searchKey, setSearchKey] = useState<string>('');
   const [selectedSingleOpt, setSelectedSingleOpt] = useState<string>('');
-  const [option_list, setOptions] = useState<string[]>(options)
+  const [option_list] = useState<string[]>(options)
 
   const onClickDropdown = () => {
     setSearchActive(true);
