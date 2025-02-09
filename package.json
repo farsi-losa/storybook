@@ -9,7 +9,7 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "deploy-storybook": "npm run storybook build && vercel deploy ./storybook-static"
+    "deploy-storybook": "npm run storybook build && vercel deploy "
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
@@ -36,5 +36,8 @@
     "storybook": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": "22.X"
   }
 }
